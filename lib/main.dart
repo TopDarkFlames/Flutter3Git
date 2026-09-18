@@ -62,6 +62,36 @@ class InicioPage extends StatelessWidget {
       icone: Icons.add_shopping_cart,
       pagina: CadastroProdutosPage(),
     ),
+    _Exercicio(
+      titulo: 'Fixação 1: Linguagens',
+      descricao: 'Oito linguagens usando ListView.builder',
+      icone: Icons.code,
+      pagina: LinguagensPage(),
+    ),
+    _Exercicio(
+      titulo: 'Fixação 2: Catálogo de livros',
+      descricao: 'Classe Livro exibida em Cards',
+      icone: Icons.menu_book,
+      pagina: LivrosPage(),
+    ),
+    _Exercicio(
+      titulo: 'Fixação 3: Lista de alunos',
+      descricao: 'Classe Aluno com nome e nota',
+      icone: Icons.people,
+      pagina: AlunosPage(),
+    ),
+    _Exercicio(
+      titulo: 'Fixação 4: Cadastro de tarefas',
+      descricao: 'Adicionar e remover tarefas',
+      icone: Icons.task_alt,
+      pagina: TarefasPage(),
+    ),
+    _Exercicio(
+      titulo: 'Fixação 5: Estoque simples',
+      descricao: 'Produtos com preço e quantidade',
+      icone: Icons.warehouse,
+      pagina: EstoquePage(),
+    ),
   ];
 
   @override
@@ -363,6 +393,317 @@ class _CadastroProdutosPageState extends State<CadastroProdutosPage> {
                             title: Text(produto.nome),
                             subtitle: Text(
                               'R\$ ${produto.preco.toStringAsFixed(2)}',
+                            ),
+                            trailing: IconButton(
+                              tooltip: 'Remover produto',
+                              icon: const Icon(Icons.delete),
+                              onPressed: () => removerProduto(index),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LinguagensPage extends StatelessWidget {
+  const LinguagensPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const linguagens = [
+      'Dart',
+      'Java',
+      'Kotlin',
+      'Python',
+      'JavaScript',
+      'C#',
+      'C++',
+      'Swift',
+    ];
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Lista de Linguagens')),
+      body: ListView.builder(
+        itemCount: linguagens.length,
+        itemBuilder: (_, index) => ListTile(
+          leading: CircleAvatar(child: Text('${index + 1}')),
+          title: Text(linguagens[index]),
+        ),
+      ),
+    );
+  }
+}
+
+class Livro {
+  final String titulo;
+  final String autor;
+
+  const Livro({required this.titulo, required this.autor});
+}
+
+class LivrosPage extends StatelessWidget {
+  const LivrosPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const livros = [
+      Livro(titulo: 'O Hobbit', autor: 'J. R. R. Tolkien'),
+      Livro(titulo: 'Dom Casmurro', autor: 'Machado de Assis'),
+      Livro(titulo: 'O Pequeno Príncipe', autor: 'Antoine de Saint-Exupéry'),
+      Livro(titulo: '1984', autor: 'George Orwell'),
+    ];
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Catálogo de Livros')),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(12),
+        itemCount: livros.length,
+        itemBuilder: (_, index) {
+          final livro = livros[index];
+          return Card(
+            child: ListTile(
+              leading: const Icon(Icons.book, size: 32),
+              title: Text(
+                livro.titulo,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text('Autor: ${livro.autor}'),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class Aluno {
+  final String nome;
+  final double nota;
+
+  const Aluno({required this.nome, required this.nota});
+}
+
+class AlunosPage extends StatelessWidget {
+  const AlunosPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const alunos = [
+      Aluno(nome: 'Ana Souza', nota: 9.5),
+      Aluno(nome: 'Bruno Lima', nota: 8.0),
+      Aluno(nome: 'Carla Mendes', nota: 7.5),
+      Aluno(nome: 'Diego Santos', nota: 6.8),
+    ];
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Lista de Alunos')),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(12),
+        itemCount: alunos.length,
+        itemBuilder: (_, index) {
+          final aluno = alunos[index];
+          return Card(
+            child: ListTile(
+              leading: const Icon(Icons.person),
+              title: Text(aluno.nome),
+              subtitle: Text('Nota: ${aluno.nota.toStringAsFixed(1)}'),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class TarefasPage extends StatefulWidget {
+  const TarefasPage({super.key});
+
+  @override
+  State<TarefasPage> createState() => _TarefasPageState();
+}
+
+class _TarefasPageState extends State<TarefasPage> {
+  final tarefaController = TextEditingController();
+  final tarefas = <String>[];
+
+  @override
+  void dispose() {
+    tarefaController.dispose();
+    super.dispose();
+  }
+
+  void adicionarTarefa() {
+    final tarefa = tarefaController.text.trim();
+    if (tarefa.isEmpty) return;
+
+    setState(() {
+      tarefas.add(tarefa);
+    });
+    tarefaController.clear();
+  }
+
+  void removerTarefa(int index) {
+    setState(() {
+      tarefas.removeAt(index);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Cadastro de Tarefas')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(
+              controller: tarefaController,
+              onSubmitted: (_) => adicionarTarefa(),
+              decoration: const InputDecoration(labelText: 'Nova tarefa'),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: adicionarTarefa,
+              child: const Text('Adicionar tarefa'),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: tarefas.isEmpty
+                  ? const Center(child: Text('Nenhuma tarefa cadastrada.'))
+                  : ListView.builder(
+                      itemCount: tarefas.length,
+                      itemBuilder: (_, index) => Card(
+                        child: ListTile(
+                          leading: const Icon(Icons.check_box_outline_blank),
+                          title: Text(tarefas[index]),
+                          trailing: IconButton(
+                            tooltip: 'Remover tarefa',
+                            icon: const Icon(Icons.delete),
+                            onPressed: () => removerTarefa(index),
+                          ),
+                        ),
+                      ),
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class EstoquePage extends StatefulWidget {
+  const EstoquePage({super.key});
+
+  @override
+  State<EstoquePage> createState() => _EstoquePageState();
+}
+
+class _EstoquePageState extends State<EstoquePage> {
+  final nomeController = TextEditingController();
+  final precoController = TextEditingController();
+  final quantidadeController = TextEditingController();
+  final produtos = <Produto>[];
+
+  @override
+  void dispose() {
+    nomeController.dispose();
+    precoController.dispose();
+    quantidadeController.dispose();
+    super.dispose();
+  }
+
+  void adicionarProduto() {
+    final nome = nomeController.text.trim();
+    final preco = double.tryParse(precoController.text.replaceAll(',', '.'));
+    final quantidade = int.tryParse(quantidadeController.text);
+
+    if (nome.isEmpty ||
+        preco == null ||
+        preco <= 0 ||
+        quantidade == null ||
+        quantidade < 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Preencha os dados corretamente.')),
+      );
+      return;
+    }
+
+    setState(() {
+      produtos.add(
+        Produto(nome: nome, preco: preco, quantidade: quantidade),
+      );
+    });
+    nomeController.clear();
+    precoController.clear();
+    quantidadeController.clear();
+  }
+
+  void removerProduto(int index) {
+    setState(() {
+      produtos.removeAt(index);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Estoque Simples')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(
+              controller: nomeController,
+              decoration: const InputDecoration(labelText: 'Nome do produto'),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: precoController,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    decoration: const InputDecoration(labelText: 'Preço'),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    controller: quantidadeController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(labelText: 'Quantidade'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: adicionarProduto,
+              child: const Text('Cadastrar produto'),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: produtos.isEmpty
+                  ? const Center(child: Text('Estoque vazio.'))
+                  : ListView.builder(
+                      itemCount: produtos.length,
+                      itemBuilder: (_, index) {
+                        final produto = produtos[index];
+                        return Card(
+                          child: ListTile(
+                            leading: const Icon(Icons.inventory_2),
+                            title: Text(produto.nome),
+                            subtitle: Text(
+                              'R\$ ${produto.preco.toStringAsFixed(2)}'
+                              ' • Quantidade: ${produto.quantidade}',
                             ),
                             trailing: IconButton(
                               tooltip: 'Remover produto',
